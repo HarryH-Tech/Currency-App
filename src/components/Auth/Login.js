@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   Grid,
   Segment,
@@ -9,15 +9,59 @@ import {
   Divider
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { REGISTER } from "../../constants/Routes";
+import { REGISTER, HOME } from "../../constants/Routes";
+import { ErrorMessage } from "../../constants/CustomStyledComponents";
+import { withRouter, Redirect } from "react-router";
+import { AuthContext } from "../../Auth";
+import firebase from "../../firebase";
 
-const Login = () => {
+const Login = ({ history }) => {
   const [loginDetails, setLoginDetails] = useState({
-    username: "",
+    email: "",
     password: ""
   });
 
-  const handleLogin = () => {};
+  const [appDetails, setAppDetails] = useState({
+    loading: false,
+    errors: ""
+  });
+  const { email, password } = loginDetails;
+  const { loading, errors } = appDetails;
+
+  const validateForm = ({ email, password }) => {
+    console.log("validate");
+    if (!email || !password) {
+      setAppDetails({
+        loading: false,
+        errors: "All fields must be filled out."
+      });
+    }
+    return true;
+  };
+
+  const handleLogin = useCallback(
+    async e => {
+      e.preventDefault();
+      const { email, password } = e.target.elements;
+      if (validateForm(loginDetails)) {
+        try {
+          await firebase
+            .auth()
+            .signInWithEmailAndPassword(email.value, password.value);
+          history.push("/");
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    },
+
+    [history]
+  );
+
+  const { currentUser } = useContext(AuthContext);
+  if (currentUser) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <Segment>
@@ -38,9 +82,10 @@ const Login = () => {
                 onChange={e =>
                   setLoginDetails({
                     ...loginDetails,
-                    [e.target.name]: [e.target.value]
+                    [e.target.name]: e.target.value
                   })
                 }
+                value={email}
               ></Form.Input>
               <Form.Input
                 fluid
@@ -52,12 +97,14 @@ const Login = () => {
                 onChange={e =>
                   setLoginDetails({
                     ...loginDetails,
-                    [e.target.name]: [e.target.value]
+                    [e.target.name]: e.target.value
                   })
                 }
+                value={password}
               ></Form.Input>
+              {errors && <ErrorMessage>{errors}</ErrorMessage>}
               <Button color="green">
-                <Icon name="sign in alternate" size="big" color="white" />
+                <Icon name="sign in alternate" size="big" />
                 Login
               </Button>
               <p style={{ marginTop: "12px" }}>

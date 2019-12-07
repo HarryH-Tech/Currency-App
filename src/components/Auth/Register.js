@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Grid,
   Segment,
@@ -10,8 +10,11 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { LOGIN } from "../../constants/Routes";
+import { ErrorMessage } from "../../constants/CustomStyledComponents";
+import firebase from "../../firebase";
+import { withRouter } from "react-router";
 
-const Register = ({ firebase }) => {
+const Register = ({ history }) => {
   const [registerDetails, setRegisterDetails] = useState({
     username: "",
     email: "",
@@ -21,32 +24,76 @@ const Register = ({ firebase }) => {
 
   const [appDetails, setAppDetails] = useState({
     loading: false,
-    errors: []
+    errors: ""
   });
 
-  const handleRegister = e => {
-    e.preventDefault();
-    console.log("r");
-    firebase
-      .doCreateUserWithEmailAndPassword(email, password)
-      .then(authUser => {
-        setRegisterDetails({ ...registerDetails });
-      })
-      .catch(err => {
+  const { username, email, password, confirmPassword } = registerDetails;
+
+  const { loading, errors } = appDetails;
+
+  //Validate Form Submission called in handleSubmit Function
+  const validateForm = () => {
+    console.log("validateForm");
+
+    if (isFormEmpty(registerDetails)) {
+      setAppDetails({ errors: "Please fill in all fields" });
+      console.log("fill in all fields");
+      return false;
+    } else if (!isPasswordValid(registerDetails)) {
+      console.log("password invalid");
+      setAppDetails({
+        errors:
+          "Password is invalid. It must be at least 6 letters long and both passwords must match."
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  //Check if all form fields are filled in, called in validateForm function
+  const isFormEmpty = ({ username, email, password, confirmPassword }) => {
+    return (
+      !username.length ||
+      !email.length ||
+      !password.length ||
+      !confirmPassword.length
+    );
+  };
+
+  // Validate password, called in validateForm function
+  const isPasswordValid = ({ password, confirmPassword }) => {
+    if (password.length < 6 || confirmPassword.length < 6) {
+      return false;
+    } else if (password !== confirmPassword) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleRegister = useCallback(
+    async e => {
+      e.preventDefault();
+      console.log("r");
+      const { email, password } = e.target.elements;
+      try {
+        console.log(email);
+
+        await firebase
+          .auth()
+          .createUserWithEmailAndPassword(email.value, password.value);
+        history.push("/home");
+      } catch (err) {
+        console.log(err);
         setAppDetails({
           loading: false,
           errors: err.message
         });
-      });
-  };
-
-  const { username, email, password, confirmPassword } = registerDetails;
-
-  const isInvalid =
-    password !== confirmPassword ||
-    password === "" ||
-    email === "" ||
-    username === "";
+      }
+    },
+    [history]
+  );
 
   return (
     <Segment>
@@ -118,7 +165,7 @@ const Register = ({ firebase }) => {
                 value={confirmPassword}
               ></Form.Input>
 
-              {appDetails.errors && <p>{appDetails.errors}</p>}
+              {errors && <ErrorMessage>{errors}</ErrorMessage>}
               <Button color="green">
                 <Icon name="user" size="big" />
                 Register
@@ -136,4 +183,4 @@ const Register = ({ firebase }) => {
   );
 };
 
-export default Register;
+export default withRouter(Register);

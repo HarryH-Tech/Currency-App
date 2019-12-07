@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { Header, Icon, Segment } from "semantic-ui-react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { AuthProvider } from "./Auth";
+
+//Custom Components
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
-import { FirebaseContext } from "./components/Firebase";
+import Home from "./components/Home";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (
@@ -24,18 +28,15 @@ function App() {
         <Icon name="yen sign" size="big" />
       </Segment>
 
-      <Router>
-        <Switch>
-          <Route path="/register">
-            <FirebaseContext.Consumer>
-              {firebase => <Register firebase={firebase} />}
-            </FirebaseContext.Consumer>
-          </Route>
-          <Route path="/">
-            <Login />
-          </Route>
-        </Switch>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <div>
+            <PrivateRoute exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+          </div>
+        </Router>
+      </AuthProvider>
     </>
   );
 }
