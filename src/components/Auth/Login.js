@@ -28,30 +28,20 @@ const Login = ({ history }) => {
   const { email, password } = loginDetails;
   const { loading, errors } = appDetails;
 
-  const validateForm = ({ email, password }) => {
-    console.log("validate");
-    if (!email || !password) {
-      setAppDetails({
-        loading: false,
-        errors: "All fields must be filled out."
-      });
-    }
-    return true;
-  };
-
   const handleLogin = useCallback(
     async e => {
       e.preventDefault();
       const { email, password } = e.target.elements;
-      if (validateForm(loginDetails)) {
-        try {
-          await firebase
-            .auth()
-            .signInWithEmailAndPassword(email.value, password.value);
-          history.push("/");
-        } catch (err) {
-          console.log(err);
-        }
+      try {
+        await firebase
+          .auth()
+          .signInWithEmailAndPassword(email.value, password.value);
+        history.push("/");
+      } catch (err) {
+        setAppDetails({
+          loading: false,
+          errors: err.message
+        });
       }
     },
 
