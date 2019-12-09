@@ -1,16 +1,17 @@
-import React, { useContext, useState } from "react";
-import { store } from "./QuizStore";
+import React, { useContext } from "react";
+import QuizContext from "./Context/QuizContext";
+import { Message } from "semantic-ui-react";
 
 const Question = () => {
-  const quizState = useContext(store);
-  const { questions } = quizState.state;
+  const { state } = useContext(QuizContext);
+  const { currentQuestion, questions } = state;
+  const question = questions[currentQuestion];
 
   return (
     <>
-      <h1>Question</h1>
-      {questions.map(question => (
-        <p key={question.question}>{question.question}</p>
-      ))}
+      <Message color="green" size="large">
+        {question.number}. {question.question}
+      </Message>
     </>
   );
 };

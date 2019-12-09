@@ -11,7 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import { REGISTER, HOME } from "../../constants/Routes";
 import { ErrorMessage } from "../../constants/CustomStyledComponents";
-import { withRouter, Redirect } from "react-router";
+import { Redirect } from "react-router";
 import { AuthContext } from "../../Auth";
 import firebase from "../../firebase";
 
