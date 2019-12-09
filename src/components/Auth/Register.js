@@ -1,13 +1,5 @@
 import React, { useState, useCallback } from "react";
-import {
-  Grid,
-  Segment,
-  Header,
-  Icon,
-  Button,
-  Form,
-  Divider
-} from "semantic-ui-react";
+import { Grid, Segment, Header, Icon, Button, Form } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { LOGIN } from "../../constants/Routes";
 import { ErrorMessage } from "../../constants/CustomStyledComponents";

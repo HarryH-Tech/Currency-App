@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import firebase from "../firebase";
+import React, { useContext } from "react";
 import { AuthContext } from "../Auth";
 import { Grid } from "semantic-ui-react";
 import Quiz from "./Quiz/Quiz";

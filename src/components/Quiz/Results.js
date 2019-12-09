@@ -1,18 +1,26 @@
 import React, { useContext } from "react";
-import { Icon, Segment, Modal, Header, Button } from "semantic-ui-react";
+import { Icon, Modal, Header, Button } from "semantic-ui-react";
 import QuizContext from "./Context/QuizContext";
 import { SET_SHOW_MODAL } from "./Context/types";
+import styled from "styled-components";
+
+const ResultSegment = styled.div`
+  width: 80%;
+  margin: auto;
+  border: 2px solid #e2e2e2;
+  border-radius: 10px;
+  box-shadow: 5px 6px 4px #888888;
+  text-align: center;
+  margin-bottom: 25px;
+
+  &:hover {
+    box-shadow: 5px 12px 4px #888888;
+  }
+`;
 
 const Results = () => {
   const { state, dispatch } = useContext(QuizContext);
-  const {
-    answers,
-    questions,
-    currentQuestion,
-    currentAnswer,
-    correctAnswers,
-    showModal
-  } = state;
+  const { answers, questions, correctAnswers, showModal } = state;
 
   const closeModal = () => {
     dispatch({ type: SET_SHOW_MODAL, showModal: false });
@@ -30,14 +38,11 @@ const Results = () => {
 
       return (
         <>
-          <Segment size="huge" key={question.number}>
-            <div style={{ textAlign: "center" }}>
+          <ResultSegment size="huge" key={question.number}>
+            <h3>
               {question.question} {showResultMark(question, answer)}
-              <br />
-              <br />
-              <br />
-            </div>
-          </Segment>
+            </h3>
+          </ResultSegment>
         </>
       );
     });
@@ -51,10 +56,9 @@ const Results = () => {
           <strong>
             You answered: {question[answerKey]} <br />
             <br />
-            <br />
           </strong>
           <span className="correct">
-            <Icon name="thumbs up" size="small" /> Correct
+            <Icon name="thumbs up" size="small" color="green" /> Correct
           </span>
         </div>
       );
@@ -64,10 +68,9 @@ const Results = () => {
         <strong>
           Sorry, you got this question wrong. <br />
           <br />
-          <br />
         </strong>
         <span className="incorrect">
-          <Icon name="thumbs down" size="small" /> Incorrect
+          <Icon name="thumbs down" size="small" color="red" /> Incorrect
         </span>
       </div>
     );
@@ -77,13 +80,13 @@ const Results = () => {
     <>
       <Modal open={showModal} onClose={closeModal}>
         <Header icon="question circle" content="Final Score..." />
-        <Modal.Content>
-          <div style={{ textAlign: "center" }}>
-            <h3 style={{ textAlign: "center" }}>
+        <Modal.Content style={{ textAlign: "center" }}>
+          <div>
+            <h3>
               You scored {correctAnswers} out of {questions.length}
             </h3>
 
-            {correctAnswers > 8 ? (
+            {correctAnswers > 5 ? (
               <>
                 <h2>Well Done! You Did Great :)</h2>
                 <Icon name="smile outline" size="huge" />

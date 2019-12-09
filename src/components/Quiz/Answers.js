@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import QuizContext from "./Context/QuizContext";
 import { SET_CURRENT_ANSWER } from "./Context/types";
-import { Button, Segment } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 
-const Answers = ({}) => {
+const Answers = () => {
   const { state, dispatch } = useContext(QuizContext);
   const { currentQuestion, questions, currentAnswer } = state;
   const answer = questions[currentQuestion];
@@ -23,6 +23,7 @@ const Answers = ({}) => {
         value={"a"}
         color="green"
         size="huge"
+        style={{ marginBottom: "8px" }}
       >
         {answer.a}
       </Button>
@@ -34,6 +35,7 @@ const Answers = ({}) => {
         value={"b"}
         color="green"
         size="huge"
+        style={{ marginBottom: "8px" }}
       >
         {answer.b}
       </Button>
@@ -44,6 +46,7 @@ const Answers = ({}) => {
         value={"c"}
         color="green"
         size="huge"
+        style={{ marginBottom: "8px" }}
       >
         {answer.c}
       </Button>

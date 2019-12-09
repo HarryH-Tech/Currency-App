@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import QuizContext from "./Context/QuizContext";
-import { Button, Progress as P } from "semantic-ui-react";
+import { Progress as P } from "semantic-ui-react";
 
 const Progress = () => {
   const { state } = useContext(QuizContext);

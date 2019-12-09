@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer } from "react";
 import { Header, Segment, Icon, Button } from "semantic-ui-react";
 
 import Question from "./Question";
@@ -6,8 +6,6 @@ import Answers from "./Answers";
 import Progress from "./Progress";
 import Results from "./Results";
 import QuizNavigation from "./QuizNavigation";
-
-import { AuthContext } from "../../Auth";
 
 import QuizContext from "./Context/QuizContext";
 import {
@@ -20,7 +18,6 @@ import {
 import QuizReducer from "./Context/QuizReducer";
 
 const Quiz = () => {
-  const { currentUser } = useContext(AuthContext);
   const questions = [
     {
       number: "1",
@@ -37,6 +34,30 @@ const Quiz = () => {
       b: "Sweden",
       c: "Italy",
       correct: "b"
+    },
+    {
+      number: "3",
+      question: "From which of the following regions does the Dinar come from?",
+      a: "Middle East",
+      b: "North America",
+      c: "Western Europe",
+      correct: "a"
+    },
+    {
+      number: "4",
+      question: "In which country was paper money introduced around 1200BC?",
+      a: "China",
+      b: "Korea",
+      c: "Sweden",
+      correct: "a"
+    },
+    {
+      number: "5",
+      question: "In which country was paper money introduced around 1200BC?",
+      a: "China",
+      b: "Korea",
+      c: "Sweden",
+      correct: "a"
     }
   ];
 
@@ -45,7 +66,6 @@ const Quiz = () => {
     currentQuestion: 0,
     currentAnswer: "",
     startQuiz: false,
-    currentAnswer: "",
     answers: [],
     correctAnswers: 0,
     showResults: false,
@@ -54,7 +74,7 @@ const Quiz = () => {
 
   const [state, dispatch] = useReducer(QuizReducer, initialState);
 
-  const { startQuiz, answers, showResults } = state;
+  const { startQuiz, showResults } = state;
 
   const beginQuiz = () => {
     dispatch({ type: SET_START_QUIZ, startQuiz: true });
@@ -92,6 +112,8 @@ const Quiz = () => {
   } else if (!startQuiz && !showResults) {
     return (
       <>
+        <hr />
+        <br />
         <Segment
           inverted
           color="teal"
@@ -115,12 +137,8 @@ const Quiz = () => {
     console.log(showResults);
     return (
       <QuizContext.Provider value={{ state, dispatch }}>
-        <div style={{ textAlign: "center" }}>
-          <Button
-            onClick={restartQuiz}
-            color="green"
-            style={{ textAlign: "center" }}
-          >
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <Button onClick={restartQuiz} color="green">
             Restart Quiz
           </Button>
         </div>

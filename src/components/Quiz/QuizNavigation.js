@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import QuizContext from "./Context/QuizContext";
 import { Button } from "semantic-ui-react";
 import {
@@ -18,10 +18,7 @@ const QuizNavigation = () => {
     currentQuestion,
     currentAnswer,
     answers,
-    correctAnswers,
-    showResults,
-    startQuiz,
-    showModal
+    correctAnswers
   } = state;
   const question = questions[currentQuestion];
 
@@ -64,7 +61,7 @@ const QuizNavigation = () => {
 
   return (
     <>
-      {currentQuestion + 1 == questions.length ? (
+      {currentQuestion + 1 !== 1 ? (
         <>
           <Button color="blue" onClick={previousQuestion}>
             Previous Question
@@ -74,13 +71,11 @@ const QuizNavigation = () => {
         ""
       )}
 
-      {currentQuestion + 1 <= questions.length ? (
-        <Button onClick={submitAnswer} color="blue">
-          Next Question
-        </Button>
-      ) : (
-        ""
-      )}
+      <Button onClick={submitAnswer} color="blue">
+        {currentQuestion + 1 === questions.length
+          ? "End Quiz"
+          : "Next Question"}
+      </Button>
     </>
   );
 };

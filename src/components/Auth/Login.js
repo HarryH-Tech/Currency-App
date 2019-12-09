@@ -1,15 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
-import {
-  Grid,
-  Segment,
-  Header,
-  Icon,
-  Button,
-  Form,
-  Divider
-} from "semantic-ui-react";
+import { Grid, Segment, Header, Icon, Button, Form } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { REGISTER, HOME } from "../../constants/Routes";
+import { REGISTER } from "../../constants/Routes";
 import { ErrorMessage } from "../../constants/CustomStyledComponents";
 import { Redirect } from "react-router";
 import { AuthContext } from "../../Auth";
@@ -33,15 +25,30 @@ const Login = ({ history }) => {
       e.preventDefault();
       const { email, password } = e.target.elements;
       try {
+        setAppDetails({ loading: true });
         await firebase
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
         history.push("/");
       } catch (err) {
-        setAppDetails({
-          loading: false,
-          errors: err.message
-        });
+        console.log(err);
+        if (err.code === "auth/invalid-email") {
+          setAppDetails({
+            loading: false,
+            errors: "Please ensure you have entered the correct email."
+          });
+        } else if (err.code === "auth/wrong-password") {
+          setAppDetails({
+            loading: false,
+            errors: "Please ensure you have entered the correct password."
+          });
+        } else if (err.code === "auth/too-many-requests") {
+          setAppDetails({
+            loading: false,
+            errors:
+              "Sorry. You have exceeded the maximum number of login attempts allowed for the moment. Please try again in a minute."
+          });
+        }
       }
     },
 
@@ -91,9 +98,15 @@ const Login = ({ history }) => {
                   })
                 }
                 value={password}
+                minLength={6}
               ></Form.Input>
-              {errors && <ErrorMessage>{errors}</ErrorMessage>}
-              <Button color="green">
+              {errors && (
+                <ErrorMessage>
+                  <h3>Error:</h3>
+                  {errors}
+                </ErrorMessage>
+              )}
+              <Button color="green" loading={loading}>
                 <Icon name="sign in alternate" size="big" />
                 Login
               </Button>
