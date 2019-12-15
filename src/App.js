@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { AuthProvider } from "./Auth";
 
 //Custom Components
@@ -9,6 +9,7 @@ import Register from "./components/Auth/Register";
 import Home from "./components/Home";
 import Header from "./Header";
 import PrivateRoute from "./PrivateRoute";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -16,11 +17,12 @@ function App() {
       <AuthProvider>
         <Header />
         <Router>
-          <div>
+          <Switch>
             <PrivateRoute exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
-          </div>
+            <Route path="*" component={NotFound} />
+          </Switch>
         </Router>
       </AuthProvider>
     </>

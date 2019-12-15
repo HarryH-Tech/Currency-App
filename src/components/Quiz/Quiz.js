@@ -6,6 +6,7 @@ import Answers from "./Answers";
 import Progress from "./Progress";
 import Results from "./Results";
 import QuizNavigation from "./QuizNavigation";
+import Errors from "./Errors";
 
 import QuizContext from "./Context/QuizContext";
 import {
@@ -58,6 +59,32 @@ const Quiz = () => {
       b: "Korea",
       c: "Sweden",
       correct: "a"
+    },
+    {
+      number: "6",
+      question:
+        "What was the name of the device invented in the early 1800's to combat the counterfeiting problem?",
+      a: "Dandy Stool",
+      b: "Dandy Roll",
+      c: "Dandy Device",
+      correct: "b"
+    },
+    {
+      number: "7",
+      question: "In which year was the U.S. mint created?",
+      a: "1792",
+      b: "1886",
+      c: "1779",
+      correct: "a"
+    },
+    {
+      number: "8",
+      question:
+        "In what year and country did the watermark technique first appear to prevent counterfeiting?",
+      a: "1282 in England",
+      b: "1282 in Italy",
+      c: "1283 in Russia",
+      correct: "b"
     }
   ];
 
@@ -69,7 +96,8 @@ const Quiz = () => {
     answers: [],
     correctAnswers: 0,
     showResults: false,
-    showModal: false
+    showModal: false,
+    errors: ""
   };
 
   const [state, dispatch] = useReducer(QuizReducer, initialState);
@@ -101,6 +129,8 @@ const Quiz = () => {
           >
             <Question />
             <Answers />
+            <Errors />
+
             <QuizNavigation />
             <Progress />
           </Segment>

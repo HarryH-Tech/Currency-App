@@ -5,7 +5,8 @@ import {
   SET_START_QUIZ,
   SET_CORRECT_ANSWERS,
   SET_FINISH_QUIZ,
-  SET_SHOW_MODAL
+  SET_SHOW_MODAL,
+  SET_ERRORS
 } from "./types";
 
 const QuizReducer = (state, action) => {
@@ -49,6 +50,12 @@ const QuizReducer = (state, action) => {
       return {
         ...state,
         showModal: action.showModal
+      };
+
+    case SET_ERRORS:
+      return {
+        ...state,
+        errors: action.errors
       };
 
     default:

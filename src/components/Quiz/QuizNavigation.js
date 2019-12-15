@@ -8,7 +8,8 @@ import {
   SET_ANSWERS,
   SET_FINISH_QUIZ,
   SET_START_QUIZ,
-  SET_SHOW_MODAL
+  SET_SHOW_MODAL,
+  SET_ERRORS
 } from "./Context/types";
 
 const QuizNavigation = () => {
@@ -18,18 +19,21 @@ const QuizNavigation = () => {
     currentQuestion,
     currentAnswer,
     answers,
-    correctAnswers
+    correctAnswers,
+    errors
   } = state;
   const question = questions[currentQuestion];
 
-  const previousQuestion = () => {
-    dispatch({
-      type: SET_CURRENT_QUESTION,
-      currentQuestion: currentQuestion - 1
-    });
-  };
-
   const submitAnswer = () => {
+    if (!currentAnswer) {
+      dispatch({ type: SET_ERRORS, errors: "Please Select An Option." });
+      return;
+    }
+
+    if (errors) {
+      dispatch({ type: SET_ERRORS, errors: "" });
+    }
+
     const answer = { questionId: question.number, answer: currentAnswer };
     answers.push(answer);
     dispatch({
@@ -40,6 +44,7 @@ const QuizNavigation = () => {
       type: SET_CURRENT_ANSWER,
       currentAnswer: ""
     });
+
     if (currentQuestion + 1 < questions.length) {
       if (answer.answer === question.correct) {
         dispatch({
@@ -61,20 +66,8 @@ const QuizNavigation = () => {
 
   return (
     <>
-      {currentQuestion + 1 !== 1 ? (
-        <>
-          <Button color="blue" onClick={previousQuestion}>
-            Previous Question
-          </Button>
-        </>
-      ) : (
-        ""
-      )}
-
       <Button onClick={submitAnswer} color="blue">
-        {currentQuestion + 1 === questions.length
-          ? "End Quiz"
-          : "Next Question"}
+        Submit Answer
       </Button>
     </>
   );

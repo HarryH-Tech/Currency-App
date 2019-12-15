@@ -8,7 +8,6 @@ import { withRouter } from "react-router";
 
 const Register = ({ history }) => {
   const [registerDetails, setRegisterDetails] = useState({
-    username: "",
     email: "",
     password: "",
     confirmPassword: ""
@@ -19,50 +18,9 @@ const Register = ({ history }) => {
     errors: ""
   });
 
-  const { username, email, password, confirmPassword } = registerDetails;
+  const { email, password, confirmPassword } = registerDetails;
 
-  const { loading, errors } = appDetails;
-
-  //Validate Form Submission called in handleSubmit Function
-  const validateForm = () => {
-    console.log("validateForm");
-
-    if (isFormEmpty(registerDetails)) {
-      setAppDetails({ errors: "Please fill in all fields" });
-      console.log("fill in all fields");
-      return false;
-    } else if (!isPasswordValid(registerDetails)) {
-      console.log("password invalid");
-      setAppDetails({
-        errors:
-          "Password is invalid. It must be at least 6 letters long and both passwords must match."
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  //Check if all form fields are filled in, called in validateForm function
-  const isFormEmpty = ({ username, email, password, confirmPassword }) => {
-    return (
-      !username.length ||
-      !email.length ||
-      !password.length ||
-      !confirmPassword.length
-    );
-  };
-
-  // Validate password, called in validateForm function
-  const isPasswordValid = ({ password, confirmPassword }) => {
-    if (password.length < 6 || confirmPassword.length < 6) {
-      return false;
-    } else if (password !== confirmPassword) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  const { errors } = appDetails;
 
   const handleRegister = useCallback(
     async e => {
@@ -96,21 +54,7 @@ const Register = ({ history }) => {
               <Header as="h1" color="blue">
                 Register
               </Header>
-              <Form.Input
-                fluid
-                name="username"
-                icon="user"
-                iconPosition="left"
-                placeholder="Username"
-                type="text"
-                onChange={e =>
-                  setRegisterDetails({
-                    ...registerDetails,
-                    [e.target.name]: e.target.value
-                  })
-                }
-                value={username}
-              ></Form.Input>
+
               <Form.Input
                 fluid
                 name="email"

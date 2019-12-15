@@ -39,7 +39,7 @@ const Results = () => {
       return (
         <>
           <ResultSegment size="huge" key={question.number}>
-            <h3>
+            <h3 style={{ marginTop: "10px" }}>
               {question.question} {showResultMark(question, answer)}
             </h3>
           </ResultSegment>
@@ -86,7 +86,7 @@ const Results = () => {
               You scored {correctAnswers} out of {questions.length}
             </h3>
 
-            {correctAnswers > 5 ? (
+            {correctAnswers > 4 ? (
               <>
                 <h2>Well Done! You Did Great :)</h2>
                 <Icon name="smile outline" size="huge" />
